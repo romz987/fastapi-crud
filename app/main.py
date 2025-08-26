@@ -37,3 +37,11 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return db_task
+
+# Изменить статус задачи по id 
+@app.patch("/tasks/{task_id}", response_model=schemas.Task)
+def change_status(task_id: int, status: schemas.ChangeStatus, db: Session = Depends(get_db)):
+    db_task = crud.change_status(db, task_id=task_id, status=status)
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return db_task

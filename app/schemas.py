@@ -16,3 +16,7 @@ class Task(TaskBase):
 
     class Config:
         orm_mode = True
+
+# Схема для изменения статуса задачи
+class ChangeStatus(BaseModel):
+    status: str

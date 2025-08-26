@@ -11,12 +11,6 @@ def create_task(db: Session, task: schemas.TaskCreate):
     db.refresh(db_task)
     return db_task
 
-
-
-
-
-
-
 # Функция для получения задачи по ID
 def get_task(db: Session, task_id: int):
     return db.query(models.Task).filter(models.Task.id == task_id).first()
@@ -31,5 +25,15 @@ def delete_task(db: Session, task_id: int):
     if db_task:
         db.delete(db_task)
         db.commit()
+        return db_task
+    return None
+
+# Изменить статус задачи
+def change_status(db: Session, task_id: int, status: schemas.ChangeStatus):
+    db_task = get_task(db, task_id)
+    if db_task:
+        db_task.status = status.status # pyright: ignore
+        db.commit()
+        db.refresh(db_task)
         return db_task
     return None
