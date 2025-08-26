@@ -1,14 +1,17 @@
 from pydantic import BaseModel
 
-# Базовая схема 
+
+# Базовая схема
 class TaskBase(BaseModel):
     title: str
     description: str | None = None
     status: str | None = None
 
+
 # Схема для создания задачи
 class TaskCreate(TaskBase):
     pass
+
 
 # Схема для отображения задачи
 class Task(TaskBase):
@@ -16,6 +19,7 @@ class Task(TaskBase):
 
     class Config:
         orm_mode = True
+
 
 # Схема для изменения статуса задачи
 class ChangeStatus(BaseModel):

@@ -1,26 +1,34 @@
 from sqlalchemy.orm import Session
 from app.db import models
 from app import schemas
+from app.db.models import Task
 
 
 # Функция для создания новой задачи
-def create_task(db: Session, task: schemas.TaskCreate):
-    db_task = models.Task(title=task.title, description=task.description, status=task.status)
+def create_task(db: Session, task: schemas.TaskCreate) -> Task:
+    db_task = models.Task(
+        title=task.title,
+        description=task.description,
+        status=task.status,
+    )
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
     return db_task
 
+
 # Функция для получения задачи по ID
-def get_task(db: Session, task_id: int):
+def get_task(db: Session, task_id: int) -> Task | None:
     return db.query(models.Task).filter(models.Task.id == task_id).first()
 
+
 # Функция для получения списка задач с возможностью пагинации
-def get_tasks(db: Session, skip: int = 0, limit: int = 10):
+def get_tasks(db: Session, skip: int = 0, limit: int = 10) -> list[Task]:
     return db.query(models.Task).offset(skip).limit(limit).all()
 
+
 # Функция для удаления задачи по ID
-def delete_task(db: Session, task_id: int):
+def delete_task(db: Session, task_id: int) -> Task | None:
     db_task = get_task(db, task_id)
     if db_task:
         db.delete(db_task)
@@ -28,11 +36,16 @@ def delete_task(db: Session, task_id: int):
         return db_task
     return None
 
+
 # Изменить статус задачи
-def change_status(db: Session, task_id: int, status: schemas.ChangeStatus):
+def change_status(
+    db: Session,
+    task_id: int,
+    status: schemas.ChangeStatus,
+) -> Task | None:
     db_task = get_task(db, task_id)
     if db_task:
-        db_task.status = status.status # pyright: ignore
+        db_task.status = status.status  # pyright: ignore
         db.commit()
         db.refresh(db_task)
         return db_task
