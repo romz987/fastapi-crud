@@ -34,13 +34,16 @@ def update_task(
     data: schemas.UpdateTask,
 ) -> Task | None:
     db_task = get_task(db, task_id)
-    if db_task:
-        db_task.title = data.title  # pyright: ignore
-        db_task.description = data.description  # pyright: ignore
-        db.commit()
-        db.refresh(db_task)
-        return db_task
-    return None
+    if not db_task:
+        return None
+    # если данные есть
+    if data.title not in (None, ""):
+        db_task.title = data.title # pyright: ignore 
+    if data.description not in (None, ""):
+        db_task.description = data.description # pyright: ignore
+    db.commit()
+    db.refresh(db_task)
+    return db_task
 
 
 # Удалить задачу по ID
