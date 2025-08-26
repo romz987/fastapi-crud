@@ -1,0 +1,7 @@
+ruff
+black
+fastapi[standard]
+sqlalchemy
+psycopg2-binary
+alembic
+dotenv
