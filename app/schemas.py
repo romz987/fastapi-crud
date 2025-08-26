@@ -24,3 +24,9 @@ class Task(TaskBase):
 # Схема для изменения статуса задачи
 class ChangeStatus(BaseModel):
     status: str
+
+
+# Схема для обновления данных задачи
+class UpdateTask(BaseModel):
+    title: str
+    description: str
