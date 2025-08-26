@@ -5,7 +5,7 @@ from pydantic import BaseModel
 # Диапазон значений для Status 
 class StatusEnum(str, Enum):
     created = "created"
-    in_process = "in_process"
+    in_process = "in progress"
     done = "done"
 
 
