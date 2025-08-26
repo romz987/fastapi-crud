@@ -31,12 +31,12 @@ def read_task(task_id: int, db: Session = Depends(get_db)):
     return db_task
 
 # Удалить задачу по id 
-@app.delete("/tasks/{task_id}", response_model=schemas.Task)
+@app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(task_id: int, db: Session = Depends(get_db)):
     db_task = crud.delete_task(db=db, task_id=task_id)
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
-    return db_task
+    return None
 
 # Изменить статус задачи по id 
 @app.patch("/tasks/{task_id}", response_model=schemas.Task)
