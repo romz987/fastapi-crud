@@ -1,6 +1,6 @@
 from app import schemas, crud
 from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, status
 # oth 
 from app.context_manager import get_db
 
@@ -12,7 +12,7 @@ async def root():
     return { "roman": "it works!" }
 
 # Добавить задачу
-@app.post("/tasks/", response_model=schemas.Task)
+@app.post("/tasks/", response_model=schemas.Task, status_code=status.HTTP_201_CREATED)
 async def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
     return crud.create_task(db=db, task=task)
 
