@@ -20,8 +20,8 @@ def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
 
 # Получить список задач
 @app.get("/tasks/", response_model=list[schemas.Task])
-def read_tasks(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    tasks = crud.get_tasks(db, skip=skip, limit=limit)
+def read_tasks(db: Session = Depends(get_db)):
+    tasks = crud.get_tasks(db)
     return tasks
 
 
@@ -29,6 +29,17 @@ def read_tasks(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
 @app.get("/tasks/{task_id}", response_model=schemas.Task)
 def read_task(task_id: int, db: Session = Depends(get_db)):
     db_task = crud.get_task(db, task_id=task_id)
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return db_task
+
+
+# Обновить данные задачи
+@app.put("/tasks/{task_id}", response_model=schemas.Task)
+def update_task(
+    task_id: int, data: schemas.UpdateTask, db: Session = Depends(get_db)
+):
+    db_task = crud.update_task(db, task_id=task_id, data=data)
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return db_task
