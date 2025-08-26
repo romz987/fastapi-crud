@@ -1,11 +1,19 @@
+from enum import Enum
 from pydantic import BaseModel
+
+
+# Диапазон значений для Status 
+class StatusEnum(str, Enum):
+    created = "created"
+    in_process = "in_process"
+    done = "done"
 
 
 # Базовая схема
 class TaskBase(BaseModel):
     title: str
     description: str | None = None
-    status: str | None = None
+    status: StatusEnum | None = None
 
 
 # Схема для создания задачи
@@ -23,10 +31,10 @@ class Task(TaskBase):
 
 # Схема для изменения статуса задачи
 class ChangeStatus(BaseModel):
-    status: str
+    status: StatusEnum
 
 
 # Схема для обновления данных задачи
 class UpdateTask(BaseModel):
-    title: str
-    description: str
+    title: str | None = None
+    description: str | None = None
