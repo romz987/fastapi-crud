@@ -10,7 +10,7 @@ app = FastAPI()
 
 # Добавить задачу
 @app.post(
-    "/tasks/",
+    "/api/tasks/",
     response_model=schemas.Task,
     status_code=status.HTTP_201_CREATED,
 )
@@ -19,14 +19,14 @@ def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
 
 
 # Получить список задач
-@app.get("/tasks/", response_model=list[schemas.Task])
+@app.get("/api/tasks/", response_model=list[schemas.Task])
 def read_tasks(db: Session = Depends(get_db)):
     tasks = crud.get_tasks(db)
     return tasks
 
 
 # Получить задачу по id
-@app.get("/tasks/{task_id}", response_model=schemas.Task)
+@app.get("/api/tasks/{task_id}", response_model=schemas.Task)
 def read_task(task_id: int, db: Session = Depends(get_db)):
     db_task = crud.get_task(db, task_id=task_id)
     if db_task is None:
@@ -35,7 +35,7 @@ def read_task(task_id: int, db: Session = Depends(get_db)):
 
 
 # Обновить данные задачи
-@app.put("/tasks/{task_id}", response_model=schemas.Task)
+@app.put("/api/tasks/{task_id}", response_model=schemas.Task)
 def update_task(
     task_id: int, data: schemas.UpdateTask, db: Session = Depends(get_db)
 ):
@@ -46,7 +46,7 @@ def update_task(
 
 
 # Удалить задачу по id
-@app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/api/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(task_id: int, db: Session = Depends(get_db)):
     db_task = crud.delete_task(db=db, task_id=task_id)
     if db_task is None:
@@ -55,7 +55,7 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
 
 
 # Изменить статус задачи по id
-@app.patch("/tasks/{task_id}", response_model=schemas.Task)
+@app.patch("/api/tasks/{task_id}", response_model=schemas.Task)
 def change_status(
     task_id: int,
     status: schemas.ChangeStatus,
