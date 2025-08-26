@@ -10,7 +10,7 @@ def test_create_item():
         "description": "test with pytest",
         "status": "created",
     }
-    response = client.post("/tasks/", json=data)
+    response = client.post("/api/tasks/", json=data)
     assert response.status_code == 201
     result = response.json()
     assert result["title"] == data["title"]
@@ -25,10 +25,10 @@ def test_get_item():
         "description": "hello!",
         "status": "in progress",
     }
-    response = client.post("/tasks/", json=data)
+    response = client.post("/api/tasks/", json=data)
     task_id = response.json()["id"]
     # проверяем наличие объекта
-    get_response = client.get(f"/tasks/{task_id}")
+    get_response = client.get(f"/api/tasks/{task_id}")
     assert get_response.status_code == 200
     result = get_response.json()
     assert result["title"] == data["title"]
@@ -36,7 +36,7 @@ def test_get_item():
 
 
 def test_get_list_items():
-    response = client.get("/tasks/")
+    response = client.get("/api/tasks/")
     assert response.status_code == 200
     result = response.json()
     assert isinstance(result, list)
@@ -44,15 +44,15 @@ def test_get_list_items():
 
 def test_change_status():
     data = {"title": "task", "description": "desc", "status": "created"}
-    response = client.post("/tasks/", json=data)
+    response = client.post("/api/tasks/", json=data)
     task_id = response.json()["id"]
     # проверяем статус
     patch_response = client.patch(
-        f"/tasks/{task_id}", json={"status": "in process"},
+        f"/api/tasks/{task_id}", json={"status": "in progress"},
     )
     assert patch_response.status_code == 200
     result = patch_response.json()
-    assert result["status"] == "in process"
+    assert result["status"] == "in progress"
 
 
 def test_delete():
@@ -61,12 +61,12 @@ def test_delete():
         "description": "test with pytest",
         "status": "created",
     }
-    response = client.post("/tasks/", json=data)
+    response = client.post("/api/tasks/", json=data)
     assert response.status_code == 201
     task_id = response.json()["id"]
     # удаляем
-    del_response = client.delete(f"/tasks/{task_id}")
+    del_response = client.delete(f"/api/tasks/{task_id}")
     assert del_response.status_code == 204
     # проверяем удаление
-    get_response = client.get(f"/tasks/{task_id}")
+    get_response = client.get(f"/api/tasks/{task_id}")
     assert get_response.status_code == 404
