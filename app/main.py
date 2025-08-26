@@ -1,8 +1,8 @@
-import schemas, crud
+from app import schemas, crud
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, HTTPException
 # oth 
-from context_manager import get_db
+from app.context_manager import get_db
 
 app = FastAPI()
 
